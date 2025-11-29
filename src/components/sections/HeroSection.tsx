@@ -1,0 +1,183 @@
+'use client';
+
+import React, { useRef } from 'react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Github, Linkedin, Mail, Download, ArrowDown } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+
+// Animation Variants
+const fadeInDown = {
+  hidden: { opacity: 0, y: -30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' } },
+};
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (delay: number = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: 'easeOut', delay },
+  }),
+};
+
+const bounce = {
+    y: {
+        duration: 0.6,
+        repeat: Infinity,
+        repeatType: "reverse",
+        ease: "easeOut"
+    }
+};
+
+
+export default function HeroSection() {
+   const targetRef = useRef<HTMLDivElement>(null);
+   const { scrollYProgress } = useScroll({
+     target: targetRef,
+     offset: ["start start", "end start"],
+   });
+
+   // Parallax transformations for background shapes
+   const yShape1 = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+   const yShape2 = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+   const yShape3 = useTransform(scrollYProgress, [0, 1], ["0%", "70%"]);
+   const scaleShape = useTransform(scrollYProgress, [0, 0.5], [1, 1.2]);
+
+  // Google Drive direct download link (provided)
+  const resumeDownloadUrl = "https://drive.google.com/uc?export=download&id=1_BBwzgVs2xa9Apo3qU59rajZl5RrIZ1G";
+
+  return (
+    <section 
+      ref={targetRef} 
+      id="home" 
+      className="relative h-[100dvh] flex items-center justify-center text-center px-4 sm:px-6 lg:px-8 overflow-hidden"
+    >
+       {/* Subtle Background Gradient */}
+       <div className="absolute inset-0 -z-10 bg-gradient-to-br from-background via-secondary/10 to-background"></div>
+
+        {/* Animated Abstract Shapes with Parallax */}
+       <motion.div
+            style={{ y: yShape1, scale: scaleShape }}
+            className="absolute top-1/4 left-1/4 w-32 h-32 bg-primary/10 rounded-full filter blur-xl opacity-40 animate-blob animation-delay-2000 -z-10"
+        />
+       <motion.div
+            style={{ y: yShape2 }}
+            className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-secondary/10 rounded-full filter blur-xl opacity-50 animate-blob animation-delay-4000 -z-10"
+       />
+       {/* Updated accent blob color (Indigo/Blue) */}
+       <motion.div
+            style={{ y: yShape3 }}
+            className="absolute top-1/3 right-1/3 w-24 h-24 bg-accent/20 rounded-full filter blur-lg opacity-30 animate-blob -z-10"
+       />
+
+
+      <motion.div
+        className="relative z-10 max-w-3xl mx-auto"
+        initial="hidden"
+        animate="visible"
+        variants={{ visible: { transition: { staggerChildren: 0.2 } } }}
+      >
+        <motion.h1
+          className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl"
+          variants={fadeInDown}
+        >
+          <span className="block text-foreground">Hello, I'm</span>
+          <span className="block text-primary">Nargis Khatun</span>
+        </motion.h1>
+        <motion.p
+          className="mt-3 text-base text-muted-foreground sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0"
+          variants={fadeInUp}
+          custom={0.2}
+        >
+          Master of Computer Applications | Java Developer | Full Stack Web Developer | Creative Problem Solver
+        </motion.p>
+        <motion.div
+          className="mt-5 sm:mt-8 flex flex-col sm:flex-row justify-center items-center max-w-2xl mx-auto gap-3 sm:gap-4" // Added max-width and centering
+          variants={fadeInUp}
+          custom={0.4}
+        >
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-auto"> {/* Container for main buttons */}
+            {/* Get in Touch Button */}
+            <Button size="lg" asChild className="w-auto bg-gradient-accent bg-[#24998d] text-accent-foreground hover:opacity-90 transition shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+              <Link href="#contact">
+                Get in Touch
+              </Link>
+            </Button>
+            {/* Resume Download Button */}
+            <Button variant="outline" size="lg" asChild className="w-auto shadow-sm hover:shadow-md transform hover:-translate-y-1 transition hover:bg-[#24998d]">
+              <a href={resumeDownloadUrl} download="Nargis_Khatun_Resume.pdf">
+                <Download className="mr-2 h-4 w-4" /> Download Resume
+              </a>
+            </Button>
+          </div>
+          {/* Social Media Icons */}
+          <div className="flex justify-center gap-4 mt-3 sm:mt-0">
+            <Button variant="ghost" size="icon" asChild className="text-muted-foreground hover:text-white hover:bg-[#24998d] transition transform hover:scale-110">
+              <a href="https://github.com/nk-nargis" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                <Github />
+              </a>
+            </Button>
+            <Button variant="ghost" size="icon" asChild className="text-muted-foreground hover:text-white hover:bg-[#24998d] transition transform hover:scale-110">
+              <a href="https://www.linkedin.com/in/nargis-khatun-41014620a/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                <Linkedin />
+              </a>
+            </Button>
+            <Button variant="ghost" size="icon" asChild className="text-muted-foreground hover:text-white hover:bg-[#24998d] transition transform hover:scale-110">
+              <a href="mailto:nargiskhatun5483@gmail.com" aria-label="Email">
+                <Mail />
+              </a>
+            </Button>
+          </div>
+        </motion.div>
+      </motion.div>
+
+      {/* Updated Scroll Down Indicator with subtle styling and delayed animation */}
+      <motion.div
+        className="absolute bottom-6 sm:bottom-10 left-0 right-0 z-10 flex justify-center items-center"
+        initial={{ opacity: 0, y: 0 }}
+        animate={{ opacity: 1, y: [0, 10, 0] }}
+        transition={{
+          opacity: { delay: 1.2, duration: 0.6 },
+          y: {
+            delay: 1.2,
+            duration: 2,
+            repeat: Infinity,
+            repeatType: "reverse",
+            ease: "easeInOut"
+          }
+        }}
+      >
+        <div 
+          className="relative group cursor-pointer"
+          onClick={() => {
+            const aboutSection = document.getElementById('about');
+            if (aboutSection) {
+              aboutSection.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}
+        >
+          <div className="absolute inset-0 rounded-full bg-white/5 backdrop-blur-[2px] group-hover:bg-white/10 transition-all duration-300" />
+          <div className="relative p-3 rounded-full border border-white/10 bg-white/5 backdrop-blur-[2px] shadow-lg transform group-hover:scale-110 transition-all duration-300">
+            <ArrowDown className="w-6 h-6 text-primary/80 group-hover:text-white transition-colors duration-300" />
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Keep existing blob animation CSS */}
+      <style jsx>{`
+        @keyframes blob {
+          0% { transform: translate(0px, 0px) scale(1); }
+          33% { transform: translate(30px, -50px) scale(1.1); }
+          66% { transform: translate(-20px, 20px) scale(0.9); }
+          100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob {
+          animation: blob 10s infinite ease-in-out alternate;
+        }
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
+      `}</style>
+    </section>
+  );
+}
